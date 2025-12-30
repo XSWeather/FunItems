@@ -1,0 +1,160 @@
+items:
+  disorientation:
+    material: ENDER_EYE
+    name: "&x&0&0&F&F&8&3[&x&0&0&F&0&9&3★&x&0&0&E&0&A&2]&x&0&0&D&1&B&2 &x&0&0&C&1&C&1Д&x&0&0&B&2&D&1е&x&0&0&A&2&E&0з&x&0&0&9&3&F&0о&x&0&0&8&3&F&Fр&x&1&4&7&3&F&Fи&x&2&8&6&2&F&Fе&x&3&C&5&2&F&Fн&x&5&0&4&2&F&Fт&x&6&3&3&1&F&Fа&x&7&7&2&1&F&Fц&x&8&B&1&0&F&Fи&x&9&F&0&0&F&Fя"
+    lore:
+      - "&8● &7Каст: &9Звуковая волна"
+      - "&8● &7Радиус: &910 блоков"
+      - ""
+      - "&8● &7Эффекты для противников:"
+      - " &8- &cИссушение III (00:10)"
+      - " &8- &cЗамедление V (00:05)"
+      - " &8- &cУтомление V (00:05)"
+      - " &8- &cСлепота (00:03)"
+      - " &8- &cТошнота (00:03)"
+      - ""
+      - "&7Чем ближе цель, тем дольше"
+      - "&7длительность эффектов"
+    enchanted: false
+    custom-model-data: 0
+    hide-attributes: true
+    attributes: []
+    # attribute: [amount, operation, uuid]
+    pdc:
+      funitems:type: "disorientation"
+    cooldown:
+      nearby: # Выдавать кулдаун только если в радиусе есть игроки?
+        enable: true # Да - true; Нет - false
+        time: 0.2
+      time: 60
+    type: DISORIENTATION
+    radius: 10
+    effects:
+      - "SLOW_DIGGING:3:4"
+      - "SLOW:3:4"
+      - "WITHER:6:2"
+      - "BLINDNESS:2:2"
+      - "CONFUSION:2:2"
+    sound:
+      name: ENTITY_ILLUSIONER_MIRROR_MOVE
+      pitch: 0.5
+      volume: 1.0
+    particles:
+      radius: 10
+      count: 500
+      velocity: 40.0
+      type: DRAGON_BREATH
+      interval: 2.0
+  dust:
+    material: SUGAR
+    name: "&x&0&0&F&F&F&F[&x&0&0&F&E&F&4★&x&0&0&F&D&E&9]&x&0&0&F&C&D&F &x&0&0&F&B&D&4Я&x&0&0&F&A&C&9в&x&0&0&F&9&B&Eн&x&0&0&F&9&B&4а&x&0&0&F&8&A&9я&x&0&0&F&7&9&E &x&0&0&F&6&9&3п&x&0&0&F&5&8&9ы&x&0&0&F&4&7&Eл&x&0&0&F&3&7&3ь"
+    lore:
+      - "&8● &7Каст: &9Световая вспышка"
+      - "&8● &7Радиус: &910 блоков"
+      - ""
+      - "&8● &7Эффекты для противников:"
+      - " &8- &cСвечение (00:30)"
+      - " &8- &cСлепота (00:01)"
+      - ""
+      - "&7Чем ближе цель, тем дольше"
+      - "&7длительность эффектов"
+    enchanted: false
+    custom-model-data: 0
+    hide-attributes: true
+    attributes: []
+    # attribute: [amount, operation, uuid]
+    pdc:
+      funitems:type: "dust"
+    cooldown:
+      nearby: # Выдавать кулдаун только если в радиусе есть игроки?
+        enable: true # Да - true; Нет - false
+        time: 0.2
+      time: 60
+    type: DUST
+    radius: 10
+    effects:
+      give:
+        - "GLOWING:30:0"
+        - "BLINDNESS:1:1"
+      remove:
+        - "INVISIBILITY:30"
+    sound:
+      name: ENTITY_ILLUSIONER_PREPARE_BLINDNESS
+      pitch: 0.5
+      volume: 1.0
+    particles:
+      radius: 100
+      count: 500
+      velocity: 10
+      type: CLOUD
+      interval: 4
+      second:
+        radius: 8
+        count: 50
+        velocity: 20
+        type: CLOUD
+        interval: 8
+  snowball:
+    material: SNOWBALL
+    name: "&x&0&0&F&F&D&6[&x&0&0&F&E&D&3★&x&0&0&F&E&D&1]&x&0&0&F&D&C&E &x&0&0&F&C&C&BС&x&0&0&F&C&C&9н&x&0&0&F&B&C&6е&x&0&0&F&B&C&4ж&x&0&0&F&A&C&1о&x&0&0&F&9&B&Eк&x&0&0&F&9&B&C &x&0&0&F&8&B&9з&x&0&0&F&7&B&6а&x&0&0&F&7&B&4м&x&0&0&F&6&B&1о&x&0&0&F&6&A&Fр&x&0&0&F&5&A&Cо&x&0&0&F&4&A&9з&x&0&0&F&4&A&7к&x&0&0&F&3&A&4а"
+    lore:
+      - "&8● &7Каст: &9Ледяная сфера"
+      - "&8● &7Радиус: &97 блоков"
+      - ""
+      - "&8● &7Эффекты для противников:"
+      - " &8- &cЗаморозка (00:01)"
+      - " &8- &cСлабость (00:03)"
+    pdc:
+      funitems:type: "snowball"
+    cooldown:
+      time: 5
+    freeze:
+      time: 3
+    radius: 7
+    effects:
+      give:
+        - "WEAKNESS:1:60"
+    sound:
+      name: ENTITY_ZOMBIE_VILLAGER_CURE
+      volume: 0.9
+      pitch: 1.0
+  aura:
+    material: PHANTOM_MEMBRANE
+    name: "&x&F&D&F&F&4&B[&x&F&D&F&2&5&2★&x&F&D&E&6&5&A]&x&F&D&D&9&6&1 &x&F&E&C&C&6&8Б&x&F&E&C&0&7&0о&x&F&E&B&3&7&7ж&x&F&E&A&6&7&Eь&x&F&E&9&9&8&5я&x&F&E&8&D&8&D &x&F&F&8&0&9&4а&x&F&F&7&3&9&Bу&x&F&F&6&7&A&3р&x&F&F&5&A&A&Aа"
+    lore:
+      - "&8● &7Каст: &9Божественная аура"
+      - "&8● &7Радиус: &92 блока"
+      - ""
+      - "&8● &7Эффекты для союзников:"
+      - " &8- &9Снятие всех эффектов"
+      - " &8- &9Невидимость (04:00)"
+      - " &8- &9Сила II (03:00)"
+      - " &8- &9Скорость II (03:00)"
+    pdc:
+      funitems:type: "aura"
+    cooldown:
+      time: 30
+    radius: 2
+    effects:
+      give:
+        - "SPEED;2;180"
+        - "INVISIBILITY;0;240"
+        - "INCREASE_DAMAGE;2;180"
+      remove:
+        - "NEGATIVE"
+    sound:
+      name: BLOCK_BEACON_ACTIVATE
+      volume: 0.9
+      pitch: 1.0
+    particles:
+      radius: 5
+      velocity: 30
+      type: FIREWORKS_SPARK
+      boost-y: 1.0
+      second:
+        type: VILLAGER_HAPPY
+        boost-y: 1
+        count: 100
+        offset-x: 0.7
+        offset-y: 1
+        offset-z: 0.7

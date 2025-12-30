@@ -1,0 +1,14 @@
+commands:
+  give-command: "Item {item} given to player {player} amount {amount}"
+  help:
+    - ""
+    - "/funitems reload - reload plugin"
+    - "/funitems give <player> <item> <amount> - give player item"
+    - "/funitems cooldown get/remove/add <player> <key> - add or remove cooldown from player"
+    - "/funitems skin give/remove/set <player> <type> <amount> virtual/physically - give player skin on trap"
+    - ""
+  reloaded: "All providers have been successfully reloaded!"
+items:
+  item-disabled: "&cПредмет на этой анархии не работает"
+  cooldown: "&c[⌛] &6Время до использования: &c{time} сек."
+  here-disabled: "&c[✖] &6Здесь этот предмет не работает."

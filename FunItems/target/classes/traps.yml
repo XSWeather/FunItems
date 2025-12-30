@@ -1,0 +1,4 @@
+traps:
+  default:
+    time: 15 # В секундах
+    schematic: default.schem # Название схемы

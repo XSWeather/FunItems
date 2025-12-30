@@ -1,0 +1,6 @@
+name: FunItems
+version: 1.0
+main: dev.yooproject.funitems.FunItems
+api-version: '1.16'
+commands:
+  funitems: {}

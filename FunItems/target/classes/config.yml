@@ -1,0 +1,35 @@
+database:
+  type: H2 # H2, SQLite, MySQL, MariaDB
+  host: ""
+  port: ""
+  database: ""
+  name: ""
+  pass: ""
+
+messages: {}
+
+settings:
+  async:
+    use-thread-pool: true
+    pool-size: 4
+  enable-debug: true
+  trap-skins:
+    enable-commands: true
+    enable-skins: true
+    enable-guis: true
+    use-as-default-trap: default
+  items:
+    dust:
+      enable: true
+    disorientation:
+      enable: true
+    smerch:
+      enable: true
+    aura:
+      enable: true
+    snowball:
+      enable: true
+    trap:
+      enable: true
+    plast:
+      enable: true
