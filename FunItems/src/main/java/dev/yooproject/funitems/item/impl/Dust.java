@@ -12,6 +12,7 @@ import dev.yooproject.funitems.services.EffectService;
 import dev.yooproject.funitems.services.ItemCooldownService;
 import dev.yooproject.funitems.services.RadiusService;
 import dev.yooproject.funitems.services.WorldGuardFlagService;
+import dev.yooproject.funitems.util.AntirelogUtil;
 import dev.yooproject.funitems.util.ClanUtil;
 import dev.yooproject.funitems.util.ColorUtil;
 import dev.yooproject.funitems.util.DebugUtil;
@@ -107,14 +108,17 @@ public class Dust implements IItem<PlayerInteractEvent> {
         for (Player target : player.getWorld().getPlayers()) {
             if (target.equals(player)) continue;
             if (target.getGameMode() == GameMode.SPECTATOR || target.getGameMode() == GameMode.CREATIVE) continue;
-
-            target.getWorld().playSound(target.getLocation(), sound, volume, pitch);
+            if (wg.isEnabled() && !wg.isItemsAllowed(target)) continue;
             if (ClanUtil.is(caster, target) && !ClanUtil.pvp(caster)) continue;
 
             double multiplier = radiusService.getMultiplier(player.getLocation(), target);
             if (multiplier <= 0) continue;
 
             hasTargets = true;
+
+            AntirelogUtil.startPvp(caster, false);
+
+            AntirelogUtil.startPvp(target, false);
 
             DebugUtil.log("Dust", "[TARGET] Player [" + target.getName() + "] within range [Multiplier: " + String.format("%.2f", multiplier) + "]");
 
@@ -160,7 +164,7 @@ public class Dust implements IItem<PlayerInteractEvent> {
             cooldownService.setCooldown(player, "dust", cooldownTime);
             cooldownService.setBukkitCooldown(getItem().getType(), player, cooldownTime * 20);
             DebugUtil.log("Dust", "[COOLDOWN] Set [dust] for Player [" + player.getName() + "] [Time: " + cooldownTime + "s]");
-        } else if ((boolean) item.getOrDefault("cooldown.nearby.enable", false)) {
+        } else if ((boolean) item.getOrDefault("cooldown.nearby.enable", false) && !AntirelogUtil.isInPvP(player)) {
             double nearbyCooldown = ((Number) item.getOrDefault("cooldown.nearby.time", 10)).doubleValue();
             cooldownService.setCooldown(player, "dust_s", nearbyCooldown);
             cooldownService.setBukkitCooldown(getItem().getType(), player, (int) (20 * nearbyCooldown));

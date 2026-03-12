@@ -49,6 +49,7 @@ dev\yooproject\funitems\util\ClanUtil.class
 dev\yooproject\funitems\providers\impl\ItemsProvider.class
 dev\yooproject\funitems\commands\base\BaseSubCommand.class
 dev\yooproject\funitems\providers\IProvider.class
+dev\yooproject\funitems\util\AntirelogUtil.class
 dev\yooproject\funitems\configuration\AbstractConfiguration.class
 dev\yooproject\funitems\item\events\PlayerInteractItemEvent.class
 dev\yooproject\funitems\services\ConfigurationService.class

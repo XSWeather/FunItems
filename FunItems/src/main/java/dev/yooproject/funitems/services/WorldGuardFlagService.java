@@ -48,6 +48,31 @@ public class WorldGuardFlagService {
         }
     }
 
+    public boolean isItemsAllowed(Location location, Player player) {
+        if (!enabled || FUNITEMS_ITEMS_ENABLE == null) return true;
+
+        try {
+            RegionContainer container = WorldGuard.getInstance().getPlatform().getRegionContainer();
+            RegionQuery query = container.createQuery();
+
+            ApplicableRegionSet regions =
+                    query.getApplicableRegions(BukkitAdapter.adapt(location));
+
+            LocalPlayer localPlayer = WorldGuardPlugin.inst().wrapPlayer(player);
+            StateFlag.State state = regions.queryState(localPlayer, FUNITEMS_ITEMS_ENABLE);
+
+            if (state == null) {
+                return true;
+            }
+
+            return state == StateFlag.State.ALLOW;
+
+        } catch (Exception e) {
+            DebugUtil.exception("WorldGuardFlagService", e);
+            return true;
+        }
+    }
+
     public boolean isItemsAllowed(Player player) {
         return isAllowed(player, FUNITEMS_ITEMS_ENABLE, true);
     }

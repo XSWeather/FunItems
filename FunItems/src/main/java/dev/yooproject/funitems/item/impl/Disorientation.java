@@ -9,6 +9,7 @@ import dev.yooproject.funitems.item.events.PlayerInteractItemEvent;
 import dev.yooproject.funitems.providers.impl.ItemsProvider;
 import dev.yooproject.funitems.providers.impl.LanguageProvider;
 import dev.yooproject.funitems.services.*;
+import dev.yooproject.funitems.util.AntirelogUtil;
 import dev.yooproject.funitems.util.ClanUtil;
 import dev.yooproject.funitems.util.ColorUtil;
 import dev.yooproject.funitems.util.DebugUtil;
@@ -89,7 +90,10 @@ public class Disorientation implements IItem<PlayerInteractEvent> {
         RadiusService radiusService = new RadiusService(radius);
 
         Sound sound = Sound.valueOf((String) item.getOrDefault("sound.name", "ENTITY_EXPERIENCE_ORB_PICKUP"));
-        player.getWorld().playSound(player.getLocation(), sound, ((Number) item.getOrDefault("sound.volume", 1.0)).floatValue(), ((Number) item.getOrDefault("sound.pitch", 1.0)).floatValue());
+        float volume = ((Number) item.getOrDefault("sound.volume", 1.0)).floatValue();
+        float pitch = ((Number) item.getOrDefault("sound.pitch", 1.0)).floatValue();
+
+        player.getWorld().playSound(player.getLocation(), sound, volume, pitch);
 
         IParticleService iParticleService = FunItems.getInstance().getIParticleService();
         iParticleService.play(player, IParticleType.DISORIENTATION, player.getLocation());
@@ -101,14 +105,18 @@ public class Disorientation implements IItem<PlayerInteractEvent> {
         for (Player target : player.getWorld().getPlayers()) {
             if (target.equals(player)) continue;
             if (target.getGameMode() == GameMode.SPECTATOR || target.getGameMode() == GameMode.CREATIVE) continue;
+            if (wg.isEnabled() && !wg.isItemsAllowed(target)) continue;
 
-            target.getWorld().playSound(target.getLocation(), sound, ((Number) item.getOrDefault("sound.volume", 1.0)).floatValue(), ((Number) item.getOrDefault("sound.pitch", 1.0)).floatValue());
             if (ClanUtil.is(caster, target) && !ClanUtil.pvp(caster)) continue;
 
             double multiplier = radiusService.getMultiplier(player.getLocation(), target);
             if (multiplier <= 0) continue;
 
             hasTargets = true;
+
+            AntirelogUtil.startPvp(caster, false);
+
+            AntirelogUtil.startPvp(target, false);
 
             DebugUtil.log("Disorientation", "[TARGET] Player [" + target.getName() + "] within range [Multiplier: " + String.format("%.2f", multiplier) + "]");
 
@@ -128,7 +136,7 @@ public class Disorientation implements IItem<PlayerInteractEvent> {
             cooldownService.setCooldown(player, "disorientation", cooldownTime);
             cooldownService.setBukkitCooldown(getItem().getType(), player, cooldownTime * 20);
             DebugUtil.log("Disorientation", "[COOLDOWN] Set [disorientation] for Player [" + player.getName() + "] [Time: " + cooldownTime + "s]");
-        } else if ((boolean) item.getOrDefault("cooldown.nearby.enable", false)) {
+        } else if ((boolean) item.getOrDefault("cooldown.nearby.enable", false) && !AntirelogUtil.isInPvP(player)) {
             double nearbyCooldown = ((Number) item.getOrDefault("cooldown.nearby.time", 10)).doubleValue();
             cooldownService.setCooldown(player, "disorientation_s", nearbyCooldown);
             cooldownService.setBukkitCooldown(getItem().getType(), player, (int) (20 * nearbyCooldown));

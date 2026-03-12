@@ -13,6 +13,7 @@ import dev.yooproject.funitems.util.DebugUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -71,12 +72,14 @@ public class Snowball implements IItem<PlayerInteractEvent>, Listener {
         if (!FunItems.getInstance().getConfig().getBoolean("settings.items.snowball.enable")){
             interactItemEvent.setCancelled(true);
             player.sendMessage(ColorUtil.translate(languageProvider.get("items.item-disabled")));
+            return;
         }
 
         WorldGuardFlagService wg = FunItems.getWorldGuardFlagService();
         if (wg.isEnabled() && !wg.isItemsAllowed(player)) {
             interactItemEvent.setCancelled(true);
             player.sendMessage(ColorUtil.translate(languageProvider.get("items.here-disabled")));
+            return;
         }
 
         if (cooldownService.hasCooldown(player, "snowball")) {
@@ -93,8 +96,19 @@ public class Snowball implements IItem<PlayerInteractEvent>, Listener {
         cooldownService.setBukkitCooldown(getItem().getType(), player, cooldownTime * 20);
         DebugUtil.log("Snowball", "[COOLDOWN] Set [snowball] for Player [" + player.getName() + "] [Time: " + cooldownTime + "s]");
         org.bukkit.entity.Snowball snowball = player.launchProjectile(org.bukkit.entity.Snowball.class);
+        if (wg.isEnabled() && !wg.isItemsAllowed(player)) {
+            interactItemEvent.setCancelled(true);
+            player.sendMessage(ColorUtil.translate(languageProvider.get("items.here-disabled")));
+        }
         NamespacedKey key = new NamespacedKey(FunItems.getInstance(), "snowball");
         snowball.getPersistentDataContainer().set(key, PersistentDataType.BYTE, (byte) 1);
+        ItemStack handItem = player.getInventory().getItemInMainHand();
+        int amount = handItem.getAmount();
+        if (amount <= 1) {
+            player.getInventory().setItemInMainHand(null);
+        } else {
+            handItem.setAmount(amount - 1);
+        }
     }
 
     @EventHandler
@@ -103,6 +117,11 @@ public class Snowball implements IItem<PlayerInteractEvent>, Listener {
 
         NamespacedKey key = new NamespacedKey(FunItems.getInstance(), "snowball");
         if (!snowball.getPersistentDataContainer().has(key, PersistentDataType.BYTE)) return;
+
+        if (snowball.isDead()) return;
+        snowball.remove();
+
+        WorldGuardFlagService wg = FunItems.getWorldGuardFlagService();
 
         Location hitLocation;
         if (event.getHitBlock() != null) {
@@ -114,6 +133,11 @@ public class Snowball implements IItem<PlayerInteractEvent>, Listener {
         }
 
         if (!(snowball.getShooter() instanceof Player shooter)) return;
+
+        if (wg.isEnabled() && !wg.isItemsAllowed(hitLocation, shooter)) {
+            snowball.remove();
+            return;
+        }
 
         IParticleService iParticleService = FunItems.getInstance().getIParticleService();
         iParticleService.play(shooter, IParticleType.SNOWBALL, hitLocation);
@@ -128,14 +152,9 @@ public class Snowball implements IItem<PlayerInteractEvent>, Listener {
         String soundName = (String) itemConfig.getOrDefault("sound.name", "ENTITY_EXPERIENCE_ORB_PICKUP");
         float volume = ((Number) itemConfig.getOrDefault("sound.volume", 1.0)).floatValue();
         float pitch = ((Number) itemConfig.getOrDefault("sound.pitch", 1.0)).floatValue();
-
         try {
-            org.bukkit.Sound sound = org.bukkit.Sound.valueOf(soundName);
-            for (Player target : shooter.getWorld().getPlayers()) {
-                if (radiusService.getMultiplier(hitLocation, target) > 0) {
-                    target.playSound(hitLocation, sound, volume, pitch);
-                }
-            }
+            Sound sound = Sound.valueOf(soundName);
+            hitLocation.getWorld().playSound(hitLocation, sound, volume, pitch);
         } catch (IllegalArgumentException ignored) {}
 
         long baseFreeze = ((Number) itemConfig.getOrDefault("freeze.time", 3)).longValue() * 20;
@@ -143,6 +162,7 @@ public class Snowball implements IItem<PlayerInteractEvent>, Listener {
         for (Player target : shooter.getWorld().getPlayers()) {
             double multiplier = radiusService.getMultiplier(hitLocation, target);
             if (multiplier <= 0) continue;
+            if (wg.isEnabled() && !wg.isItemsAllowed(target)) continue;
 
             long freezeTicks = (long) (baseFreeze * multiplier);
             frozenPlayers.put(target.getUniqueId(), System.currentTimeMillis() + freezeTicks * 50);

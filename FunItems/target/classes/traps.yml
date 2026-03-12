@@ -1,4 +1,24 @@
 traps:
   default:
-    time: 15 # В секундах
+    time: 10 # В секундах
     schematic: default.schem # Название схемы
+    cooldown: 15 # В секундах
+    sounds: []
+    particles: []
+    plast:
+      enable: true # Включать ли скин
+      directions:
+        NORTH: default_north.schem
+        NORTHEAST: default_northeast.schem
+        EAST: default_east.schem
+        SOUTHEAST: default_southeast.schem
+        SOUTH: default_south.schem
+        SOUTHWEST: default_southwest.schem
+        WEST: default_west.schem
+        NORTHWEST: default_northwest.schem
+        UP: default_up.schem
+        DOWN: default_down.schem
+      time:
+        vertical: 20
+        horizontal: 60
+      cooldown: 25
